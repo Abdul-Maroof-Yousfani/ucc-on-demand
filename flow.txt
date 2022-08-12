@@ -1,0 +1,62 @@
+
+
+ERD -> OverView
+
+-User
+    fullname
+    email
+    password
+    user_type,
+    dob,
+    user_city
+    user_address,
+    aboutme
+    schedule,
+    favDrinks
+    specialDrinksIMake,
+
+    active
+    featured
+    followers
+    following (Relational)
+        -> following_type,
+
+    RatingsGiven
+        -> userId
+        -> RatingLevel
+        -> Comments
+    
+    ProfileShared
+        -> userId
+    
+    
+    RatingsRecieved
+
+
+
+    long,
+    lat,
+
+    Notifications
+        -> Date
+        -> Message
+        -> Report,
+        -> active,
+        -> Sender
+        -> RecieverId
+
+
+    PromoPosts
+
+
+
+
+
+    
+        
+
+
+
+
+
+

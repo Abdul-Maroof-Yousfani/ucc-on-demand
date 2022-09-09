@@ -32,8 +32,6 @@ ERD -> OverView
     
     RatingsRecieved
 
-
-
     long,
     lat,
 
@@ -47,6 +45,9 @@ ERD -> OverView
 
 
     PromoPosts
+
+
+    Subscriptions
 
 
 

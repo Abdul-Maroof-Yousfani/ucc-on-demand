@@ -1,34 +1,38 @@
 import mongoose from 'mongoose';
 
 const usersSchema = new mongoose.Schema({
-    name: {
+    fullName: {
         type: String
     },
+
     email: {
         type: String,
         unique: true,
         required: [true, "Email is required"],
     },
-    username: {
-        type: String,
-        unique: true,
-        required: [true, "Username is required"],
-    },
+
     password: {
         type: String,
         required: function() {
             return this.provider_id==null?true:false
         }
     },
-    profile_picture: {
-        type: String
+    role:
+    {
+        type: mongoose.Types.ObjectId,
+        ref:"roles"
     },
-    gender: {
-        type: String,
+
+    number: {
+        type:Number,
     },
-    age: {
-        type: Number,
+
+    active:
+    {
+        type:Boolean,
+        default:true
     }
-});
+
+},{ timestamps: true});
 
 export default mongoose.model('users', usersSchema);

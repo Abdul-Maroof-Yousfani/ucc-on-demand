@@ -5,6 +5,15 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import upload from 'express-fileupload';
 import authenticationRoute from './routes/authentication.js';
+import roleRoute from './routes/role.js';
+import userRoute from './routes/user.js';
+import bartenderRoute from './routes/userTypes/bartender.js';
+import followRoute from './routes/follow.js';
+import ratingRoute from './routes/rating.js';
+import channelRoute from './routes/channel.js';
+import categoryRoute from './routes/category.js';
+import subscriptioRoute from './routes/subscription.js';
+import videoRoute from './routes/video.js';
 
 dotenv.config();
 var PORT = process.env.PORT,
@@ -21,14 +30,31 @@ const app = express();
 app.use(express.json());
 app.use(upload());
 app.use(cors());
+app.use(express.urlencoded({extended:false}))
 app.use(express.static('public'));
 
 
 app.get("/", (req, res) => res.send("Welcome to the Users API!"));
 
+// register 
+
+
+
+
+
+
 // All Routes are registered Here
 
 app.use("/api/auth", authenticationRoute);
+app.use("/api/role", roleRoute);
+app.use("/api/user", userRoute);
+app.use("/api/bartender", bartenderRoute);
+app.use('/api/follow',followRoute);
+app.use('/api/rating',ratingRoute);
+app.use('/api/channel',channelRoute);
+app.use('/api/category',categoryRoute);
+app.use('/api/subscription',subscriptioRoute);
+app.use('/api/video',videoRoute);
 
 
 const expressServer = app.listen(PORT, () => {

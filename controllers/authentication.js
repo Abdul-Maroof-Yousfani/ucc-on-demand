@@ -52,6 +52,7 @@ const socialLogin = async(req,res) =>
 
 const login = async(req,res) =>
 {
+   
     try
     {
         const loginSchema = Joi.object({
@@ -77,7 +78,7 @@ const login = async(req,res) =>
 
                 let result = await User.findByIdAndUpdate({ _id: user._id }, { $set: { jwtToken: access_token } },{new:true}).select("-password -createdAt -updatedAt -__v")
                 
-                res.json({message:"Successfully Logged In", result})
+                return res.json({message:"Successfully Logged In", result})
                 
             }
             return res.json({message:"user not found" , result:""})

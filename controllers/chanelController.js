@@ -71,9 +71,8 @@ const update = async(req,res) =>
     let {_id} = req.params;
     try
     {
-        const channel = await Channel.findByIdAndUpdate({ _id},{$set:{name:req.body.name , $pull:{   } } },{new:true}).lean();
-        res.json({message:"", channel });
-
+        // const channel = await Channel.findByIdAndUpdate({ _id},{$set:{name:req.body.name , $pull:{   } } },{new:true}).lean();
+        return res.json({});
 
     }
     catch(err)

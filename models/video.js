@@ -19,6 +19,11 @@ const videoSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref:"channels"
     },
+    category:[{
+        type:mongoose.Types.ObjectId,
+        ref:"categories"
+    }],
+
     thumbnail:{
         type:String,
         default:""

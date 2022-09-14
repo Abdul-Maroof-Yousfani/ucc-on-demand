@@ -45,9 +45,21 @@ const all = async(req,res) =>
 
     }
 }
+const view = async(req,res) =>
+{
+    try
+    {
+        let roles = await Role.find({}).lean();
+        res.json({roles})
+    }
+    catch(error)
+    {
 
+    }
+}
 
 
 export  default{
-    store
+    store,
+    view
 }

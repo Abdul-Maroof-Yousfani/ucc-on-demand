@@ -12,10 +12,7 @@ const usersSchema = new mongoose.Schema({
     },
 
     password: {
-        type: String,
-        required: function() {
-            return this.provider_id==null?true:false
-        }
+        type: String
     },
     role:
     {
@@ -31,6 +28,10 @@ const usersSchema = new mongoose.Schema({
     {
         type:Boolean,
         default:true
+    },
+    jwtToken:{
+        type:String,
+        default:""
     }
 
 },{ timestamps: true});

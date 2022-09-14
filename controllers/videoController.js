@@ -1,10 +1,11 @@
 import Joi from "joi";
 import mongoose from "mongoose";
+import helper from "../helper/helper.js";
 import Video from "../models/video.js";
 
 const store = async(req,res) =>
 {
-    let {title,thumbnail,description,channel} = req.body;
+    let {title,thumbnail,description,channel,category} = req.body;
 
     // req.body.category = []
 
@@ -13,8 +14,8 @@ const store = async(req,res) =>
         title:Joi.string().required(),
         thumbnail: Joi.string().required(),
         description:Joi.string().required(),
-        channel:Joi.string().required()
-
+        channel:Joi.string().required(),
+        category:Joi.array()
     });   
 
     const {error} = storeSchema.validate(req.body);
@@ -54,6 +55,22 @@ const view = async(req,res) =>
         res.json({error})
     }
     
+}
+const viewById = async(req,res) =>
+{
+    let {_id} = req.params;
+
+    try
+    {
+        let video = await Video.findById({_id}).lean();
+        res.json({video});
+        helper.addtoRecommendation({...video,user:"631913bc879cd6767acfbe85"})
+
+    }
+    catch(error)
+    {
+        res.json({error})
+    }
 }
 const addViews = async(req,res) =>
 {
@@ -95,6 +112,7 @@ const addFavourite = async(req,res) =>
 
 export default {
     store,
+    viewById,
     view,
     addViews,
     addFavourite

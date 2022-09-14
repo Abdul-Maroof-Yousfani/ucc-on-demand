@@ -5,10 +5,14 @@ import User from '../models/users.js';
 import Joi from 'joi';
 import Otp from '../models/otp.js';
 import helper from '../helper/helper.js';
+import JwtService from "../services/jwt.js";
+
+
 
 
 const register = async(req,res) =>
 {
+    let access_token;
     try
     {   
         const userExist = await User.findOne({ $or: [{ email: req.body.email }, { fullName: req.body.fullName }] });
@@ -19,7 +23,12 @@ const register = async(req,res) =>
                 data: null,
             });
         }
+
+        const hashedPassword = await bcrypt.hash(req.body.password,10);
+        access_token = JwtService.sign({email:req.body.email,role:req.body.role})
   
+        req.body.password = hashedPassword
+        req.body.jwtToken = access_token
         let user = await User(req.body);
         user.save();
         res.send({
@@ -54,10 +63,22 @@ const login = async(req,res) =>
         const {error} = loginSchema.validate(req.body);
         if(!error)
         {
+            
             const user = await User.findOne({email:req.body.email});
             if(user)
             {
-                res.json({message:"Successfully Logged In", user: user})
+                const match = await bcrypt.compare(req.body.password,user.password);
+                if(!match)
+                {
+                    return res.json({message:"Password Did Not Match"})
+                }
+
+                const access_token = JwtService.sign({ email: user.email, role: user.role });
+
+                let result = await User.findByIdAndUpdate({ _id: user._id }, { $set: { jwtToken: access_token } },{new:true}).select("-password -createdAt -updatedAt -__v")
+                
+                res.json({message:"Successfully Logged In", result})
+                
             }
         }
         else

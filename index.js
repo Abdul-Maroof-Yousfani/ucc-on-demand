@@ -14,6 +14,7 @@ import channelRoute from './routes/channel.js';
 import categoryRoute from './routes/category.js';
 import subscriptioRoute from './routes/subscription.js';
 import videoRoute from './routes/video.js';
+import HomeRoute from './routes/home.js';
 
 dotenv.config();
 var PORT = process.env.PORT,
@@ -55,6 +56,7 @@ app.use('/api/channel',channelRoute);
 app.use('/api/category',categoryRoute);
 app.use('/api/subscription',subscriptioRoute);
 app.use('/api/video',videoRoute);
+app.use('/api/home',HomeRoute);
 
 
 const expressServer = app.listen(PORT, () => {

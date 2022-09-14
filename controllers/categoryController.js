@@ -10,7 +10,7 @@ const store = async(req,res) =>
     const storeSchema = Joi.object({
         name:Joi.string().required()
     });   
-    const {error} = storeSchema.validate(req.body);
+    const {error} = storeSchema.validate({name});
     if(error) return res.json({error})
     try
     {

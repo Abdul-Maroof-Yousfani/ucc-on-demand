@@ -80,6 +80,8 @@ const login = async(req,res) =>
                 res.json({message:"Successfully Logged In", result})
                 
             }
+            return res.json({message:"user not found" , result:""})
+
         }
         else
         {

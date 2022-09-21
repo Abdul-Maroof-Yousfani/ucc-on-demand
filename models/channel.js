@@ -12,6 +12,10 @@ const channels = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref:"videos"
     }],
+    subscription:[{
+        type: mongoose.Types.ObjectId,
+        ref:"subscriptions"
+    }],
     active:{
         type:Boolean
     }

@@ -6,6 +6,7 @@ import auth from '../middlewares/auth.js';
 
 router.post('/',[auth,admin],role.store);
 router.get('/',[auth,admin],role.view);
+router.put('/:_id',[auth,admin],role.update);
 
 
 

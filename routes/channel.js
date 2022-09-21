@@ -7,6 +7,9 @@ import admin from '../middlewares/admin.js';
 router.post('/',[auth,admin],channelController.store);
 router.get('/',[auth],channelController.view);
 router.put('/:_id',[auth,admin],channelController.update);
+router.delete('/subscription',[auth,admin],channelController.removeSubscription);
+router.delete('/category',[auth,admin],channelController.removeCategory);
+// router.delete('/subscription/:_id',[auth,admin],channelController.remove);
 
 
 

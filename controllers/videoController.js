@@ -5,7 +5,7 @@ import Video from "../models/video.js";
 
 const store = async(req,res) =>
 {
-    let {title,thumbnail,description,channel,category} = req.body;
+    let {title,thumbnail,description,channel,category,privatePath,tag,subscription} = req.body;
 
     // req.body.category = []
 
@@ -14,8 +14,11 @@ const store = async(req,res) =>
         title:Joi.string().required(),
         thumbnail: Joi.string().required(),
         description:Joi.string().required(),
-        channel:Joi.string().required(),
-        category:Joi.array()
+        channel:Joi.array().required(),
+        category:Joi.array(),
+        privatePath:Joi.string().required(),
+        tag: Joi.array().required(),
+        subscription: Joi.array().required()
     });   
 
     const {error} = storeSchema.validate(req.body);
@@ -23,7 +26,7 @@ const store = async(req,res) =>
     try
     {
         let alreadyExist = await Video.findOne({title});
-        if(alreadyExist) return res.status(200).json({message:"Subscription Already Exists",video:alreadyExist})
+        if(alreadyExist) return res.status(200).json({message:"Title Already Exists",video:alreadyExist})
         
         let result = await Video.create(req.body);
         // let drinks = await User.findByIdAndUpdate(mongoose.Types.ObjectId(userid) ,{ $push: { drinks: req.body } },{new:true});

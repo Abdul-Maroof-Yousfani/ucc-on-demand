@@ -5,6 +5,7 @@ const usersSchema = new mongoose.Schema({
         type: String
     },
 
+
     email: {
         type: String,
         unique: true,
@@ -24,6 +25,12 @@ const usersSchema = new mongoose.Schema({
         type:Number,
     },
 
+    profile_pic:
+    {
+        type:String,
+        default: ""
+    },
+
     active:
     {
         type:Boolean,
@@ -33,7 +40,15 @@ const usersSchema = new mongoose.Schema({
         type:String,
         default:""
     }
-
+    ,
+    provider_id:{
+        type:String,
+        default:""
+    },
+    provider_name:{
+        type:String,
+        default:""
+    }
 },{ timestamps: true});
 
 export default mongoose.model('users', usersSchema);

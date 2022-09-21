@@ -1,5 +1,6 @@
 import Channel from "../models/channel.js";
 import Joi from "joi";
+import mongoose from "mongoose";
 const store = async(req,res) =>
 {
     let {name} = req.body;
@@ -52,7 +53,7 @@ const view = async(req,res) =>
                 }
             },
             { $project : {
-                _id : 0 ,
+    
                 __v : 0,
                 "Categories.__v" : 0
             }}
@@ -68,23 +69,83 @@ const view = async(req,res) =>
 
 const update = async(req,res) =>
 {
-    let {_id} = req.params;
     try
     {
-        // const channel = await Channel.findByIdAndUpdate({ _id},{$set:{name:req.body.name , $pull:{   } } },{new:true}).lean();
-        return res.json({});
-
+        let {_id} = req.params;
+        const checkChannel = Channel.findOne({_id}).lean();
+        if(!checkChannel) return res.json({message:"Channel Not Available"})
+        const channel = await Channel.findByIdAndUpdate({ _id }, { $set: req.body },{new:true}).lean();
+        res.json({
+            message:"Successfully Updated",
+            channel
+        })
     }
-    catch(err)
+    catch(error)
     {
-        res.json({err:err.message});
+        console.log(error)
     }
 }
+
+
+const removeSubscription  = async(req,res) =>
+{
+    let {id,subscriptionId} = req.query;
+
+    try
+    {
+        
+        let channel  = await Channel.updateOne({_id:id}, {$pull: {'subscription' : mongoose.Types.ObjectId(subscriptionId) }}).lean();
+        res.json({
+            message : "Successfully Removed",
+            channel
+        })
+
+    }
+    catch(error)
+    {
+        res.json({
+            channel : "",
+            error:error.message
+        })
+    }
+}
+
+const removeCategory  = async(req,res) =>
+{
+    let {id,categoryId} = req.query;
+
+    try
+    {
+        
+        let channel  = await Channel.updateOne({_id:id}, {$pull: {'category' : mongoose.Types.ObjectId(categoryId) }}).lean();
+        return res.json({
+            message : "Successfully Removed",
+            channel
+        })
+
+    }
+    catch(error)
+    {
+        res.json({
+            channel : "",
+            error:error.message
+        })
+    }
+}
+
+const remove  = async(req,res) =>
+{
+    console.log(req.query);
+    return;
+}
+
 
 
 
 export  default{
     store,
     view,
-    update
+    update,
+    removeSubscription,
+    removeCategory
 }

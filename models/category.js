@@ -10,8 +10,20 @@ const category = new mongoose.Schema({
         default:false
         
     },
+    getStarted:[{
+        
+        title:{
+            type:String,
+            default:""
+        },
+        path:{
+            type:String,
+            default:""
+        }
+    }],
     active:{
-        type:Boolean
+        type:Boolean,
+        default:true
     }
     
 });

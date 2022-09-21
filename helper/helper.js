@@ -41,9 +41,15 @@ const checkRole = async(_id) =>
     let result = await Role.findById({_id}).lean();
     return result;
 }
+const checkUser = async(_id) =>
+{
+    let user = await User.findOne({_id}).lean();
+    return user;
+}
 
 export default {
     sendOtp,
     checkRole,
-    addtoRecommendation
+    addtoRecommendation,
+    checkUser
 };

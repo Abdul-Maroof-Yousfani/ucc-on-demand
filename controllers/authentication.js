@@ -20,7 +20,7 @@ const register = async(req,res) =>
             return res.status(409).json({
                 status: "error",
                 message: "A user with this username or email already exists.",
-                data: null,
+                user: null,
             });
         }
 
@@ -46,8 +46,68 @@ const register = async(req,res) =>
 
 const socialLogin = async(req,res) =>
 {
-    console.log(req.body);
-    return 
+    try {
+        let body = req.body;
+        const loginSchema = Joi.object({
+
+            email:Joi.string().valid().required(),
+            provider_id:Joi.string().required(),
+            provider_name:Joi.string().required(),
+            
+        });
+        const {error} = loginSchema.validate(body);
+        if(error) return res.status('400').json({error:error.message});
+
+        const userExist = await User.findOne({email: body.email}).lean();
+      
+        if (userExist) {
+            if(userExist.password)
+            {
+                return res.json({status:"User Already Exists"})
+            }
+            const access_token = JwtService.sign({ email: userExist.email, role: userExist.role });
+
+            User.updateOne({ _id: userExist._id }, { $set: { jwtToken: access_token} }).then(response => {
+                return res.json({
+                    status: "success",
+                    data:User,
+                    message: `Login Successful! Logged in`,
+                    
+                })
+            }).catch(err => {
+                return res.status(500).json({
+                    status: "error",
+                    message: "An unexpected error occurred while proceeding your request.",
+                    data: null,
+                    trace: err.message
+                })
+            });
+        } else {
+            User(body).save().then(inserted => {
+                inserted.jwtToken = jwt.sign({ email: inserted.email, role: inserted.role }, process.env.JWT_SECRET);
+                inserted.save();
+                return res.json({
+                    status: "success",
+                    message: "User Added Successfully",
+                    data: inserted
+                });
+            }).catch(error => {
+                return res.status(500).json({
+                    status: "error",
+                    message: "An unexpected error occurred while proceeding your request.",
+                    data: null,
+                    trace: error.message
+                });
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: "error",
+            message: "An unexpected error occurred while proceeding your request.",
+            data: null,
+            trace: error.message
+        })
+    }  
 }
 
 const login = async(req,res) =>
@@ -65,23 +125,23 @@ const login = async(req,res) =>
         if(!error)
         {
             
-            const user = await User.findOne({email:req.body.email});
+            const user = await User.findOne({email:req.body.email, active:true});
             if(user)
             {
                 const match = await bcrypt.compare(req.body.password,user.password);
                 if(!match)
                 {
-                    return res.json({message:"Password Did Not Match"})
+                    return res.json({message:"Password Did Not Match",user:""})
                 }
 
                 const access_token = JwtService.sign({ email: user.email, role: user.role });
 
                 let result = await User.findByIdAndUpdate({ _id: user._id }, { $set: { jwtToken: access_token } },{new:true}).select("-password -createdAt -updatedAt -__v")
                 
-                return res.json({message:"Successfully Logged In", result})
+                return res.json({message:"Successfully Logged In", user:result})
                 
             }
-            return res.json({message:"user not found" , result:""})
+            return res.json({message:"user not found" , user:""})
 
         }
         else

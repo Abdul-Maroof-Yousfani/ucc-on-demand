@@ -15,13 +15,24 @@ const videoSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref:"users"
     }],
-    channel:{
-        type: mongoose.Types.ObjectId,
-        ref:"channels"
-    },
+    channel:[{
+        type:mongoose.Types.ObjectId,
+        ref:"channels",
+        default:[]
+    }],
     category:[{
         type:mongoose.Types.ObjectId,
         ref:"categories"
+    }],
+    subscription:[{
+        type:mongoose.Types.ObjectId,
+        ref:"subscriptions",
+        default:[]
+    }],
+    tag:[{
+        type:mongoose.Types.ObjectId,
+        ref:"categories",
+        default:[]
     }],
 
     thumbnail:{
@@ -30,6 +41,10 @@ const videoSchema = new mongoose.Schema({
     },
     active:{
         type:Boolean,
+        default:true
+    },
+    privatePath:{
+        type:String,
         default:true
     }
 },{ timestamps: true});

@@ -58,8 +58,33 @@ const view = async(req,res) =>
     }
 }
 
+const update = async(req,res) =>
+{
+    let {_id}  = req.params;
+  
+    try
+    {
+        let checkRole = await Role.findById({_id}).lean();
+        if(!checkRole) return res.json({message:"Role Does not Exist"})
+        
+        let role = await  Role.findByIdAndUpdate({ _id }, { $set: req.body },{new:true});
+
+        return res.json({
+            message : "successfully Upated",
+            role
+        })
+    }
+  
+    catch(error)
+    {
+        console.log(error);
+        res.json({error:error})
+    }
+}
+
 
 export  default{
     store,
-    view
+    view,
+    update
 }
